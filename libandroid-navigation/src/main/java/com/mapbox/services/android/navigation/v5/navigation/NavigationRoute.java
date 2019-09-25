@@ -52,6 +52,7 @@ public final class NavigationRoute {
 
   private final MapboxDirections mapboxDirections;
   private static AccountsManagerImpl accountsManager = null;
+  private static final String SKU_KEY = "sku";
   private static final NavigationRouteEventListener EVENT_LISTENER = new NavigationRouteEventListener();
 
   /**
@@ -91,7 +92,7 @@ public final class NavigationRoute {
       public Response intercept(Chain chain) throws IOException {
         Request request = chain.request();
         String skuToken = accountsManager.obtainSku();
-        HttpUrl url = request.url().newBuilder().addQueryParameter("sku", skuToken).build();
+        HttpUrl url = request.url().newBuilder().addQueryParameter(SKU_KEY, skuToken).build();
         request = request.newBuilder().url(url).build();
         return chain.proceed(request);
       }
