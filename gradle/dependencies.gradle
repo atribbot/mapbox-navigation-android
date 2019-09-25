@@ -15,6 +15,7 @@ ext {
       mapboxNavigator        : '6.2.1',
       mapboxCrashMonitor     : '2.0.0',
       mapboxAnnotationPlugin : '0.7.0',
+      mapboxAccounts         : '0.2.0',
       mapboxSearchSdk        : '0.1.0-SNAPSHOT',
       autoValue              : '1.5.4',
       autoValueParcel        : '0.2.5',
@@ -54,6 +55,7 @@ ext {
       mapboxAnnotationPlugin : "com.mapbox.mapboxsdk:mapbox-android-plugin-annotation-v8:${version.mapboxAnnotationPlugin}",
       mapboxSearchSdk        : "com.mapbox.mapboxsdk:mapbox-search-android:${version.mapboxSearchSdk}",
       mapboxCrashMonitor     : "com.mapbox.crashmonitor:mapbox-crash-monitor-native:${version.mapboxCrashMonitor}",
+      mapboxAndroidAccounts  : "com.mapbox.mapboxsdk:mapbox-android-accounts:${version.mapboxAccounts}",
 
       // Kotlin
       kotlinStdLib           : "org.jetbrains.kotlin:kotlin-stdlib-jdk7:${version.kotlinStdLib}",
