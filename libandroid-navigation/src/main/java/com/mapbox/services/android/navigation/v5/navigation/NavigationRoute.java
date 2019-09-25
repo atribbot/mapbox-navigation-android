@@ -1,12 +1,10 @@
 package com.mapbox.services.android.navigation.v5.navigation;
 
 import android.content.Context;
-
 import androidx.annotation.FloatRange;
 import androidx.annotation.IntRange;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-
 import com.mapbox.api.directions.v5.DirectionsCriteria;
 import com.mapbox.api.directions.v5.DirectionsCriteria.AnnotationCriteria;
 import com.mapbox.api.directions.v5.DirectionsCriteria.ExcludeCriteria;
@@ -21,19 +19,14 @@ import com.mapbox.core.exceptions.ServicesException;
 import com.mapbox.core.utils.TextUtils;
 import com.mapbox.geojson.Point;
 import com.mapbox.services.android.navigation.v5.utils.LocaleUtils;
+import okhttp3.EventListener;
+import okhttp3.Interceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-
-import okhttp3.EventListener;
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
-import okhttp3.Request;
-import okhttp3.Response;
-import retrofit2.Call;
-import retrofit2.Callback;
 
 
 /**
@@ -51,8 +44,6 @@ import retrofit2.Callback;
 public final class NavigationRoute {
 
   private final MapboxDirections mapboxDirections;
-  private static AccountsManagerImpl accountsManager = null;
-  private static final String SKU_KEY = "sku";
   private static final NavigationRouteEventListener EVENT_LISTENER = new NavigationRouteEventListener();
 
   /**
@@ -76,27 +67,14 @@ public final class NavigationRoute {
   }
 
   static Builder builder(Context context, LocaleUtils localeUtils) {
-    accountsManager = AccountsManagerImpl.getInstance(context);
+    AccountsManagerImpl accountsManager = AccountsManagerImpl.getInstance(context);
     return new Builder()
       .annotations(DirectionsCriteria.ANNOTATION_CONGESTION, DirectionsCriteria.ANNOTATION_DISTANCE)
       .language(context, localeUtils)
       .voiceUnits(context, localeUtils)
       .profile(DirectionsCriteria.PROFILE_DRIVING_TRAFFIC)
-      .interceptor(provideSkuInterceptor())
+      .interceptor(new SkuInterceptor(accountsManager))
       .continueStraight(true);
-  }
-
-  private static Interceptor provideSkuInterceptor() {
-    return new Interceptor() {
-      @Override
-      public Response intercept(Chain chain) throws IOException {
-        Request request = chain.request();
-        String skuToken = accountsManager.obtainSku();
-        HttpUrl url = request.url().newBuilder().addQueryParameter(SKU_KEY, skuToken).build();
-        request = request.newBuilder().url(url).build();
-        return chain.proceed(request);
-      }
-    };
   }
 
   /**
